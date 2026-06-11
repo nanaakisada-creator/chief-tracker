@@ -84,7 +84,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
     <div class="hero-title">チーフ候補者管理</div>
     <div class="hero-sub" id="candidate-count">読み込み中...</div>
   </div>
-  <div style="display:flex;justify-content:flex-end;margin-bottom:1rem;">
+  <div style="display:flex;border-bottom:1.5px solid var(--lv2);margin-bottom:1rem;">
+    <button class="tab-btn active" id="ftab-all" onclick="setFilter('all',this)">すべて</button>
+    <button class="tab-btn" id="ftab-秋定" onclick="setFilter('秋定',this)">秋定</button>
+    <button class="tab-btn" id="ftab-林" onclick="setFilter('林',this)">林</button>
+    <button class="tab-btn" id="ftab-三尾" onclick="setFilter('三尾',this)">三尾</button>
+    <button class="tab-btn" id="ftab-岩下" onclick="setFilter('岩下',this)">岩下</button>
+    <button class="tab-btn" id="ftab-佐藤" onclick="setFilter('佐藤',this)">佐藤</button>
+  </div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:0.75rem;">
     <button class="btn-primary" onclick="showScreen('screen-new-candidate','new')"><i class="ti ti-plus"></i>候補者を登録</button>
   </div>
   <div id="candidates-list"><div class="loading"><span class="spinner"></span>データを取得中...</div></div>
@@ -271,6 +279,43 @@ async function api(method, path, body){
 let currentCandidateId = null;
 let currentCandidate = null;
 let currentTab = 'records';
+let currentFilter = 'all';
+let allCandidates = [];
+
+function setFilter(val, el){
+  currentFilter = val;
+  document.querySelectorAll('#screen-list .tab-btn').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderCandidateList();
+}
+
+function renderCandidateList(){
+  const el = document.getElementById('candidates-list');
+  const list = currentFilter==='all' ? allCandidates : allCandidates.filter(c=>c.supporter===currentFilter);
+  document.getElementById('candidate-count').textContent = currentFilter==='all'
+    ? `${allCandidates.length}名登録中`
+    : `${currentFilter}担当：${list.length}名`;
+  if(!list.length){
+    el.innerHTML='<div class="empty-state"><i class="ti ti-heart" style="font-size:28px;display:block;margin:0 auto 10px;color:var(--pk3)"></i>該当する候補者がいません</div>';
+    return;
+  }
+  el.innerHTML = list.map(c=>`
+    <div class="candidate-card" onclick="openCandidate(${c.id})">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="avatar">${initials(c.name)}</div>
+          <div>
+            <div class="card-name">${c.name}</div>
+            <div class="card-meta"><i class="ti ti-building-store" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>${c.store}　<i class="ti ti-user" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>${c.supporter}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;">
+          <span class="badge-count"><i class="ti ti-file-text" style="font-size:11px;vertical-align:-1px;margin-right:2px"></i>${(c.records||[]).length}回</span>
+          <i class="ti ti-chevron-right" style="font-size:15px;color:var(--text3)"></i>
+        </div>
+      </div>
+    </div>`).join('');
+}
 
 function showToast(msg, type='success'){
   const t = document.getElementById('toast');
@@ -319,28 +364,8 @@ async function loadCandidates(){
   const el = document.getElementById('candidates-list');
   el.innerHTML = '<div class="loading"><span class="spinner"></span>読み込み中...</div>';
   try {
-    const candidates = await api('GET', 'candidates?select=*,records(id)&order=created_at.asc');
-    document.getElementById('candidate-count').textContent = `${candidates.length}名登録中`;
-    if(!candidates.length){
-      el.innerHTML='<div class="empty-state"><i class="ti ti-heart" style="font-size:28px;display:block;margin:0 auto 10px;color:var(--pk3)"></i>候補者がまだ登録されていません</div>';
-      return;
-    }
-    el.innerHTML = candidates.map(c=>`
-      <div class="candidate-card" onclick="openCandidate(${c.id})">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div class="avatar">${initials(c.name)}</div>
-            <div>
-              <div class="card-name">${c.name}</div>
-              <div class="card-meta"><i class="ti ti-building-store" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>${c.store}　<i class="ti ti-user" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>${c.supporter}</div>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;gap:7px;">
-            <span class="badge-count"><i class="ti ti-file-text" style="font-size:11px;vertical-align:-1px;margin-right:2px"></i>${(c.records||[]).length}回</span>
-            <i class="ti ti-chevron-right" style="font-size:15px;color:var(--text3)"></i>
-          </div>
-        </div>
-      </div>`).join('');
+    allCandidates = await api('GET', 'candidates?select=*,records(id)&order=supporter.asc,created_at.asc');
+    renderCandidateList();
   } catch(e){
     el.innerHTML='<div class="empty-state">データの取得に失敗しました</div>';
     showToast('読み込みエラー', 'error');
