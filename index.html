@@ -163,10 +163,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
       <input type="hidden" id="nr-edit-id">
     </div>
   </div>
-  <div class="field"><label>③ 現在の課題・感じていること</label><textarea id="nr-issues" placeholder="候補者が感じている課題や悩みを記入してください"></textarea></div>
-  <div class="field"><label>④ 課題に対する行動・意識したこと</label><textarea id="nr-actions" placeholder="課題に対して取り組んでいること、意識していることを記入してください"></textarea></div>
-  <div class="field"><label>⑤ 店舗内の変化</label><textarea id="nr-changes" placeholder="最近の店舗内の変化や気づきを記入してください"></textarea></div>
-  <div class="field"><label>⑥ その他</label><textarea id="nr-notes" placeholder="その他、共有事項や補足があれば記入してください"></textarea></div>
+  <div class="field"><label>① 現在の課題・感じていること</label><textarea id="nr-issues" placeholder="候補者が感じている課題や悩みを記入してください"></textarea></div>
+  <div class="field"><label>② 課題に対する行動・意識したこと</label><textarea id="nr-actions" placeholder="課題に対して取り組んでいること、意識していることを記入してください"></textarea></div>
+  <div class="field"><label>③ 店舗内の変化</label><textarea id="nr-changes" placeholder="最近の店舗内の変化や気づきを記入してください"></textarea></div>
+  <div class="field"><label>④ その他</label><textarea id="nr-notes" placeholder="その他、共有事項や補足があれば記入してください"></textarea></div>
   <div class="field"><label>支援部所感</label><textarea id="nr-impression" placeholder="支援部として感じたこと、今後の方針など"></textarea></div>
   <div style="display:flex;gap:8px;margin-top:1.25rem;flex-wrap:wrap;align-items:center;">
     <button class="btn-ghost" onclick="showScreen('screen-detail')">キャンセル</button>
@@ -379,13 +379,13 @@ async function loadDetail(){
             <button class="icon-btn" onclick="editRecord(${r.id})" title="編集"><i class="ti ti-edit"></i></button>
           </div>
         </div>
-        <div class="record-label">現在の課題・感じていること</div>
+        <div class="record-label">① 現在の課題・感じていること</div>
         <div class="record-text">${r.issues||'—'}</div>
-        <div class="record-label">課題に対する行動・意識したこと</div>
+        <div class="record-label">② 課題に対する行動・意識したこと</div>
         <div class="record-text">${r.actions||'—'}</div>
-        <div class="record-label">店舗内の変化</div>
+        <div class="record-label">③ 店舗内の変化</div>
         <div class="record-text">${r.changes||'—'}</div>
-        ${r.notes?`<div class="record-label">その他</div><div class="record-text">${r.notes}</div>`:''}
+        ${r.notes?`<div class="record-label">④ その他</div><div class="record-text">${r.notes}</div>`:''}
         <div class="record-label" style="color:var(--lv4);margin-top:14px;border-top:1px solid var(--lv1);padding-top:10px;">支援部所感</div>
         <div class="record-text">${r.impression||'—'}</div>
       </div>`).join('');
