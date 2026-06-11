@@ -1,3 +1,8 @@
+バッシュ
+
+cat /mnt/user-data/uploads/chief_tracker__2_.html
+出力
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -149,6 +154,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
   <div class="field"><label>③ 現在の課題・感じていること</label><textarea id="nr-issues" placeholder="候補者が感じている課題や悩みを記入してください"></textarea></div>
   <div class="field"><label>④ 課題に対する行動・意識したこと</label><textarea id="nr-actions" placeholder="課題に対して取り組んでいること、意識していることを記入してください"></textarea></div>
   <div class="field"><label>⑤ 店舗内の変化</label><textarea id="nr-changes" placeholder="最近の店舗内の変化や気づきを記入してください"></textarea></div>
+  <div class="field"><label>⑥ その他</label><textarea id="nr-notes" placeholder="その他、共有事項や補足があれば記入してください"></textarea></div>
+  <div class="field"><label>支援部所感</label><textarea id="nr-impression" placeholder="支援部として感じたこと、今後の方針など"></textarea></div>
   <div style="display:flex;gap:8px;margin-top:1.25rem;flex-wrap:wrap;align-items:center;">
     <button class="btn-ghost" onclick="showScreen('screen-detail')">キャンセル</button>
     <button class="btn-primary" id="nr-save-btn" onclick="saveRecord()">記録を保存</button>
@@ -270,6 +277,9 @@ async function loadDetail(){
         <div class="record-text">${r.actions||'—'}</div>
         <div class="record-label">店舗内の変化</div>
         <div class="record-text">${r.changes||'—'}</div>
+        ${r.notes?`<div class="record-label">その他</div><div class="record-text">${r.notes}</div>`:''}
+        <div class="record-label" style="color:var(--lv4);margin-top:14px;border-top:1px solid var(--lv1);padding-top:10px;">支援部所感</div>
+        <div class="record-text">${r.impression||'—'}</div>
       </div>`).join('');
   } catch(e){
     el.innerHTML='<div class="empty-state">データの取得に失敗しました</div>';
@@ -361,6 +371,8 @@ function resetRecordForm(){
   document.getElementById('nr-issues').value='';
   document.getElementById('nr-actions').value='';
   document.getElementById('nr-changes').value='';
+  document.getElementById('nr-notes').value='';
+  document.getElementById('nr-impression').value='';
   document.getElementById('nr-save-btn').textContent='記録を保存';
   document.getElementById('nr-delete-btn').style.display='none';
   document.querySelectorAll('#nr-chips .chip').forEach(c=>c.classList.remove('selected'));
@@ -378,6 +390,8 @@ async function editRecord(recordId){
     document.getElementById('nr-issues').value = r.issues||'';
     document.getElementById('nr-actions').value = r.actions||'';
     document.getElementById('nr-changes').value = r.changes||'';
+    document.getElementById('nr-notes').value = r.notes||'';
+    document.getElementById('nr-impression').value = r.impression||'';
     document.getElementById('nr-save-btn').textContent='更新する';
     document.getElementById('nr-delete-btn').style.display='inline-flex';
     setChipValue('nr', r.supporter);
@@ -395,16 +409,18 @@ async function saveRecord(){
   const issues = document.getElementById('nr-issues').value.trim();
   const actions = document.getElementById('nr-actions').value.trim();
   const changes = document.getElementById('nr-changes').value.trim();
+  const notes = document.getElementById('nr-notes').value.trim();
+  const impression = document.getElementById('nr-impression').value.trim();
   const editId = document.getElementById('nr-edit-id').value;
   if(!date||!supporter){alert('面談日と担当支援部を入力してください');return;}
   const btn = document.getElementById('nr-save-btn');
   btn.disabled = true;
   try {
     if(editId){
-      await api('PATCH', `records?id=eq.${editId}`, {date,supporter,issues,actions,changes});
+      await api('PATCH', `records?id=eq.${editId}`, {date,supporter,issues,actions,changes,notes,impression});
       showToast('更新しました');
     } else {
-      await api('POST', 'records', {candidate_id:currentCandidateId, date,supporter,issues,actions,changes});
+      await api('POST', 'records', {candidate_id:currentCandidateId, date,supporter,issues,actions,changes,notes,impression});
       showToast('保存しました');
     }
     showScreen('screen-detail');
@@ -432,3 +448,4 @@ loadCandidates();
 </script>
 </body>
 </html>
+完了
