@@ -208,8 +208,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
       <span class="star" onclick="setStar('5s',1)">★</span>
       <span class="star" onclick="setStar('5s',2)">★</span>
       <span class="star" onclick="setStar('5s',3)">★</span>
-      <span class="star" onclick="setStar('5s',4)">★</span>
-      <span class="star" onclick="setStar('5s',5)">★</span>
     </div>
     <input type="hidden" id="ne-5s">
   </div>
@@ -219,8 +217,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
       <span class="star" onclick="setStar('communication',1)">★</span>
       <span class="star" onclick="setStar('communication',2)">★</span>
       <span class="star" onclick="setStar('communication',3)">★</span>
-      <span class="star" onclick="setStar('communication',4)">★</span>
-      <span class="star" onclick="setStar('communication',5)">★</span>
     </div>
     <input type="hidden" id="ne-communication">
   </div>
@@ -230,8 +226,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
       <span class="star" onclick="setStar('followup',1)">★</span>
       <span class="star" onclick="setStar('followup',2)">★</span>
       <span class="star" onclick="setStar('followup',3)">★</span>
-      <span class="star" onclick="setStar('followup',4)">★</span>
-      <span class="star" onclick="setStar('followup',5)">★</span>
     </div>
     <input type="hidden" id="ne-followup">
   </div>
@@ -241,11 +235,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
       <span class="star" onclick="setStar('attitude',1)">★</span>
       <span class="star" onclick="setStar('attitude',2)">★</span>
       <span class="star" onclick="setStar('attitude',3)">★</span>
-      <span class="star" onclick="setStar('attitude',4)">★</span>
-      <span class="star" onclick="setStar('attitude',5)">★</span>
     </div>
     <input type="hidden" id="ne-attitude">
   </div>
+  <div class="field"><label>パートナーからの意見・コメント</label><textarea id="ne-partner-comment" placeholder="パートナーから受けた意見や要望などを記入してください"></textarea></div>
   <div style="display:flex;gap:8px;margin-top:1.25rem;flex-wrap:wrap;align-items:center;">
     <button class="btn-ghost" onclick="showScreen('screen-detail')">キャンセル</button>
     <button class="btn-primary" id="ne-save-btn" onclick="saveEval()">評価を保存</button>
@@ -326,7 +319,7 @@ function showToast(msg, type='success'){
 function initials(n){const p=n.trim().split(/\s+/);return p.length>=2?p[0].slice(-1)+p[1].slice(0,1):n.slice(0,2);}
 function fmtDate(d){if(!d)return'';const dt=new Date(d);return`${dt.getFullYear()}年${dt.getMonth()+1}月${dt.getDate()}日`;}
 function starsHtml(val){
-  return [1,2,3,4,5].map(i=>`<span class="star-d${i<=(val||0)?' on':''}">★</span>`).join('');
+  return [1,2,3].map(i=>`<span class="star-d${i<=(val||0)?' on':''}">★</span>`).join('');
 }
 
 function showScreen(id, mode){
@@ -441,6 +434,7 @@ async function loadEvals(){
             <span class="eval-label">${l}</span>
             <div class="stars-display">${starsHtml(e[k])}</div>
           </div>`).join('')}
+        ${e.partner_comment?`<div class="record-label" style="margin-top:10px;border-top:1px solid var(--lv1);padding-top:10px;">パートナーからの意見・コメント</div><div class="record-text">${e.partner_comment}</div>`:''}
       </div>`).join('');
   } catch(e){
     el.innerHTML='<div class="empty-state">データの取得に失敗しました</div>';
@@ -602,6 +596,7 @@ function resetEvalForm(){
   document.getElementById('ne-delete-btn').style.display='none';
   document.querySelectorAll('#ne-chips .chip').forEach(c=>c.classList.remove('selected'));
   ['5s','communication','followup','attitude'].forEach(k=>setStarValue(k,0));
+  document.getElementById('ne-partner-comment').value='';
 }
 async function editEval(evalId){
   try {
@@ -618,6 +613,7 @@ async function editEval(evalId){
     setStarValue('communication', e.score_communication);
     setStarValue('followup', e.score_followup);
     setStarValue('attitude', e.score_attitude);
+    document.getElementById('ne-partner-comment').value = e.partner_comment||'';
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
     document.getElementById('screen-new-eval').classList.add('active');
     window.scrollTo(0,0);
@@ -630,15 +626,16 @@ async function saveEval(){
   const score_communication = parseInt(document.getElementById('ne-communication').value)||null;
   const score_followup = parseInt(document.getElementById('ne-followup').value)||null;
   const score_attitude = parseInt(document.getElementById('ne-attitude').value)||null;
+  const partner_comment = document.getElementById('ne-partner-comment').value.trim();
   const editId = document.getElementById('ne-edit-id').value;
   if(!date||!evaluator){alert('評価日と評価者を入力してください');return;}
   const btn = document.getElementById('ne-save-btn');btn.disabled=true;
   try {
     if(editId){
-      await api('PATCH', `evaluations?id=eq.${editId}`, {date,evaluator,score_5s,score_communication,score_followup,score_attitude});
+      await api('PATCH', `evaluations?id=eq.${editId}`, {date,evaluator,score_5s,score_communication,score_followup,score_attitude,partner_comment});
       showToast('更新しました');
     } else {
-      await api('POST', 'evaluations', {candidate_id:currentCandidateId,date,evaluator,score_5s,score_communication,score_followup,score_attitude});
+      await api('POST', 'evaluations', {candidate_id:currentCandidateId,date,evaluator,score_5s,score_communication,score_followup,score_attitude,partner_comment});
       showToast('保存しました');
     }
     currentTab='evals';
