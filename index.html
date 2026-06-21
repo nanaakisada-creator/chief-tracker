@@ -236,23 +236,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
   </div>
   <div class="field"><label>5S</label>
     <div class="star-row" id="stars-5s">
-      <span class="star" onclick="setStar('5s',1)">★</span><span class="star" onclick="setStar('5s',2)">★</span><span class="star" onclick="setStar('5s',3)">★</span>
-    </div><input type="hidden" id="ne-5s">
+      <span class="star" onclick="setStar('5s',1)">★</span>
+      <span class="star" onclick="setStar('5s',2)">★</span>
+      <span class="star" onclick="setStar('5s',3)">★</span>
+    </div>
+    <input type="hidden" id="ne-5s">
   </div>
   <div class="field"><label>コミュニケーション・連携</label>
     <div class="star-row" id="stars-communication">
-      <span class="star" onclick="setStar('communication',1)">★</span><span class="star" onclick="setStar('communication',2)">★</span><span class="star" onclick="setStar('communication',3)">★</span>
-    </div><input type="hidden" id="ne-communication">
+      <span class="star" onclick="setStar('communication',1)">★</span>
+      <span class="star" onclick="setStar('communication',2)">★</span>
+      <span class="star" onclick="setStar('communication',3)">★</span>
+    </div>
+    <input type="hidden" id="ne-communication">
   </div>
   <div class="field"><label>フォロー・声掛け</label>
     <div class="star-row" id="stars-followup">
-      <span class="star" onclick="setStar('followup',1)">★</span><span class="star" onclick="setStar('followup',2)">★</span><span class="star" onclick="setStar('followup',3)">★</span>
-    </div><input type="hidden" id="ne-followup">
+      <span class="star" onclick="setStar('followup',1)">★</span>
+      <span class="star" onclick="setStar('followup',2)">★</span>
+      <span class="star" onclick="setStar('followup',3)">★</span>
+    </div>
+    <input type="hidden" id="ne-followup">
   </div>
   <div class="field"><label>業務への取り組み・姿勢</label>
     <div class="star-row" id="stars-attitude">
-      <span class="star" onclick="setStar('attitude',1)">★</span><span class="star" onclick="setStar('attitude',2)">★</span><span class="star" onclick="setStar('attitude',3)">★</span>
-    </div><input type="hidden" id="ne-attitude">
+      <span class="star" onclick="setStar('attitude',1)">★</span>
+      <span class="star" onclick="setStar('attitude',2)">★</span>
+      <span class="star" onclick="setStar('attitude',3)">★</span>
+    </div>
+    <input type="hidden" id="ne-attitude">
   </div>
   <div class="field"><label>パートナーからの意見・コメント</label><textarea id="ne-partner-comment" placeholder="パートナーから受けた意見や要望などを記入してください"></textarea></div>
   <div style="display:flex;gap:8px;margin-top:1.25rem;flex-wrap:wrap;align-items:center;">
@@ -280,9 +292,9 @@ async function api(method, path, body){
   return text ? JSON.parse(text) : [];
 }
 
-let currentCandidateId=null,currentCandidate=null,currentTab='records',currentFilter='all',allCandidates=[];
+let currentCandidateId=null, currentCandidate=null, currentTab='records', currentFilter='all', allCandidates=[];
 
-function setFilter(val,el){
+function setFilter(val, el){
   currentFilter=val;
   document.querySelectorAll('#screen-list .tab-btn').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
@@ -299,8 +311,10 @@ function renderCandidateList(){
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <div style="display:flex;align-items:center;gap:12px;">
           <div class="avatar">${initials(c.name)}</div>
-          <div><div class="card-name">${c.name}</div>
-          <div class="card-meta"><i class="ti ti-building-store" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>${c.store}　<i class="ti ti-user" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>${c.supporter}</div></div>
+          <div>
+            <div class="card-name">${c.name}</div>
+            <div class="card-meta"><i class="ti ti-building-store" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>${c.store}　<i class="ti ti-user" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>${c.supporter}</div>
+          </div>
         </div>
         <div style="display:flex;align-items:center;gap:7px;">
           <span class="badge-count"><i class="ti ti-file-text" style="font-size:11px;vertical-align:-1px;margin-right:2px"></i>${(c.records||[]).length}回</span>
@@ -348,7 +362,7 @@ function togglePreTasks(){
   display.style.display=display.style.display==='none'?'block':'none';
 }
 function cancelPreTasks(){
-  const pt=currentCandidate?(currentCandidate.pre_tasks||')':'';
+  const pt=currentCandidate?(currentCandidate.pre_tasks||''):'';
   document.getElementById('pre-tasks-input').value=pt;
   document.getElementById('pre-tasks-form').style.display='none';
   document.getElementById('pre-tasks-display').style.display='block';
@@ -516,7 +530,8 @@ async function editRecord(recordId){
     document.getElementById('nr-impression').value=r.impression||'';
     document.getElementById('nr-save-btn').textContent='更新する';document.getElementById('nr-delete-btn').style.display='inline-flex';
     setChipValue('nr',r.supporter);
-    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-new-record').classList.add('active');window.scrollTo(0,0);
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('screen-new-record').classList.add('active');window.scrollTo(0,0);
   }catch(e){showToast('読み込みエラー','error');}
 }
 async function saveRecord(){
@@ -559,7 +574,8 @@ async function editEval(evalId){
     document.getElementById('ne-save-btn').textContent='更新する';document.getElementById('ne-delete-btn').style.display='inline-flex';
     setChipValue('ne',e.evaluator);setStarValue('5s',e.score_5s);setStarValue('communication',e.score_communication);setStarValue('followup',e.score_followup);setStarValue('attitude',e.score_attitude);
     document.getElementById('ne-partner-comment').value=e.partner_comment||'';
-    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-new-eval').classList.add('active');window.scrollTo(0,0);
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('screen-new-eval').classList.add('active');window.scrollTo(0,0);
   }catch(e){showToast('読み込みエラー','error');}
 }
 async function saveEval(){
