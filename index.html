@@ -171,11 +171,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
       <input type="hidden" id="nr-edit-id">
     </div>
   </div>
-  <div class="field"><label>① 現在の課題・感じていること</label><textarea id="nr-issues" placeholder="候補者が感じている課題や悩みを記入してください"></textarea></div>
-  <div class="field"><label>② 課題に対する行動・意識したこと</label><textarea id="nr-actions" placeholder="課題に対して取り組んでいること、意識していることを記入してください"></textarea></div>
-  <div class="field"><label>③ 店舗内の変化</label><textarea id="nr-changes" placeholder="最近の店舗内の変化や気づきを記入してください"></textarea></div>
-  <div class="field"><label>④ その他</label><textarea id="nr-notes" placeholder="その他、共有事項や補足があれば記入してください"></textarea></div>
-  <div class="field"><label>支援部所感</label><textarea id="nr-impression" placeholder="支援部として感じたこと、今後の方針など"></textarea></div>
 
   <div style="background:linear-gradient(135deg,var(--pk1),var(--lv1));border-radius:var(--radius);padding:14px 16px;margin:1.25rem 0 1rem;">
     <div style="font-size:13px;font-weight:600;color:var(--pk5);margin-bottom:2px;">チーフ候補者 面談シート</div>
@@ -424,17 +419,8 @@ async function loadDetail(){
             <button class="icon-btn" onclick="editRecord(${r.id})" title="編集"><i class="ti ti-edit"></i></button>
           </div>
         </div>
-        <div class="record-label">① 現在の課題・感じていること</div>
-        <div class="record-text">${r.issues||'—'}</div>
-        <div class="record-label">② 課題に対する行動・意識したこと</div>
-        <div class="record-text">${r.actions||'—'}</div>
-        <div class="record-label">③ 店舗内の変化</div>
-        <div class="record-text">${r.changes||'—'}</div>
-        ${r.notes?`<div class="record-label">④ その他</div><div class="record-text">${r.notes}</div>`:''}
-        <div class="record-label" style="color:var(--lv4);margin-top:14px;border-top:1px solid var(--lv1);padding-top:10px;">支援部所感</div>
-        <div class="record-text">${r.impression||'—'}</div>
         ${(r.q1||r.q2||r.q3||r.q4||r.q5||r.q6||r.q7||r.q8||r.q9||r.q10||r.q11)?`
-        <div style="background:linear-gradient(135deg,var(--pk1),var(--lv1));border-radius:var(--radius-sm);padding:10px 12px;margin-top:14px;">
+        <div style="background:linear-gradient(135deg,var(--pk1),var(--lv1));border-radius:var(--radius-sm);padding:10px 12px;margin-top:8px;">
           <div style="font-size:11px;font-weight:600;color:var(--pk5);margin-bottom:8px;">チーフ候補者 面談シート${r.interview_count?' （第'+r.interview_count+'回）':''}</div>
           ${r.q1?`<div class="record-label">Q1. 前回決めたこと、できましたか？</div><div class="record-text">${r.q1}</div>`:''}
           ${r.q2?`<div class="record-label">Q2. やってみてどうでしたか？</div><div class="record-text">${r.q2}</div>`:''}
@@ -565,11 +551,6 @@ function resetRecordForm(){
   document.getElementById('nr-date').value = new Date().toISOString().slice(0,10);
   document.getElementById('nr-supporter').value='';
   document.getElementById('nr-edit-id').value='';
-  document.getElementById('nr-issues').value='';
-  document.getElementById('nr-actions').value='';
-  document.getElementById('nr-changes').value='';
-  document.getElementById('nr-notes').value='';
-  document.getElementById('nr-impression').value='';
   document.getElementById('nr-count').value='';
   ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11'].forEach(k=>{
     const el=document.getElementById('nr-'+k);if(el)el.value='';
@@ -586,11 +567,6 @@ async function editRecord(recordId){
     if(currentCandidate) document.getElementById('nr-candidate-label').textContent=`${currentCandidate.store}　${currentCandidate.name}`;
     document.getElementById('nr-date').value = r.date;
     document.getElementById('nr-edit-id').value = r.id;
-    document.getElementById('nr-issues').value = r.issues||'';
-    document.getElementById('nr-actions').value = r.actions||'';
-    document.getElementById('nr-changes').value = r.changes||'';
-    document.getElementById('nr-notes').value = r.notes||'';
-    document.getElementById('nr-impression').value = r.impression||'';
     document.getElementById('nr-count').value = r.interview_count||'';
     ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11'].forEach(k=>{
       const el=document.getElementById('nr-'+k);if(el)el.value=r[k]||'';
@@ -606,11 +582,6 @@ async function editRecord(recordId){
 async function saveRecord(){
   const date = document.getElementById('nr-date').value;
   const supporter = document.getElementById('nr-supporter').value;
-  const issues = document.getElementById('nr-issues').value.trim();
-  const actions = document.getElementById('nr-actions').value.trim();
-  const changes = document.getElementById('nr-changes').value.trim();
-  const notes = document.getElementById('nr-notes').value.trim();
-  const impression = document.getElementById('nr-impression').value.trim();
   const interview_count = parseInt(document.getElementById('nr-count').value)||null;
   const q1=document.getElementById('nr-q1').value.trim();
   const q2=document.getElementById('nr-q2').value.trim();
@@ -628,10 +599,10 @@ async function saveRecord(){
   const btn = document.getElementById('nr-save-btn');btn.disabled=true;
   try {
     if(editId){
-      await api('PATCH', `records?id=eq.${editId}`, {date,supporter,issues,actions,changes,notes,impression,interview_count,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11});
+      await api('PATCH', `records?id=eq.${editId}`, {date,supporter,interview_count,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11});
       showToast('更新しました');
     } else {
-      await api('POST', 'records', {candidate_id:currentCandidateId,date,supporter,issues,actions,changes,notes,impression,interview_count,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11});
+      await api('POST', 'records', {candidate_id:currentCandidateId,date,supporter,interview_count,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11});
       showToast('保存しました');
     }
     showScreen('screen-detail');
