@@ -195,7 +195,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
   <div class="field"><label>面談回数</label><input type="number" id="nr-count" placeholder="例：1" min="1" style="max-width:120px;"></div>
 
   <div style="font-size:11px;font-weight:600;color:var(--pk5);margin-bottom:8px;margin-top:4px;">① 振り返り（前回面談からの変化・行動確認）※初回は省略</div>
+  <div class="field"><label>前回の課題</label><textarea id="nr-prev-task" placeholder="前回の面談で課題としていたことを記入"></textarea></div>
   <div class="field"><label>Q1. 前回「次回までにやる」と決めたこと、実際にできましたか？</label><textarea id="nr-q1" placeholder="エピソード・事実を記入"></textarea></div>
+  <div class="field"><label>課題に対して行動したこと</label><textarea id="nr-prev-action" placeholder="前回の課題に対して実際に行動したことを記入"></textarea></div>
   <div class="field"><label>Q2. やってみてどうでしたか？うまくいったこと・いかなかったことを教えてください。</label><textarea id="nr-q2" placeholder="エピソード・事実を記入"></textarea></div>
   <div class="field"><label>Q3. 店舗やスタッフの様子で、何か変化に気づいたことはありますか？</label><textarea id="nr-q3" placeholder="エピソード・事実を記入"></textarea></div>
 
@@ -468,7 +470,9 @@ async function loadDetail(){
         ${(r.q1||r.q2||r.q3||r.q4||r.q5||r.q6||r.q7||r.q8||r.q9||r.q10||r.q11)?`
         <div style="background:linear-gradient(135deg,var(--pk1),var(--lv1));border-radius:var(--radius-sm);padding:10px 12px;margin-top:8px;">
           <div style="font-size:11px;font-weight:600;color:var(--pk5);margin-bottom:8px;">チーフ候補者 面談シート${r.interview_count?' （第'+r.interview_count+'回）':''}</div>
+          ${r.prev_task?`<div class="record-label">前回の課題</div><div class="record-text">${r.prev_task}</div>`:''}
           ${r.q1?`<div class="record-label">Q1. 前回決めたこと、できましたか？</div><div class="record-text">${r.q1}</div>`:''}
+          ${r.prev_action?`<div class="record-label">課題に対して行動したこと</div><div class="record-text">${r.prev_action}</div>`:''}
           ${r.q2?`<div class="record-label">Q2. やってみてどうでしたか？</div><div class="record-text">${r.q2}</div>`:''}
           ${r.q3?`<div class="record-label">Q3. 店舗・スタッフの変化</div><div class="record-text">${r.q3}</div>`:''}
           ${r.q4?`<div class="record-label">Q4. 自分から気づいて動いた場面（軸①）</div><div class="record-text">${r.q4}</div>`:''}
@@ -598,7 +602,7 @@ function resetRecordForm(){
   document.getElementById('nr-supporter').value='';
   document.getElementById('nr-edit-id').value='';
   document.getElementById('nr-count').value='';
-  ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11'].forEach(k=>{
+  ['prev-task','prev-action','q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11'].forEach(k=>{
     const el=document.getElementById('nr-'+k);if(el)el.value='';
   });
   document.getElementById('nr-save-btn').textContent='記録を保存';
@@ -617,6 +621,8 @@ async function editRecord(recordId){
     ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11'].forEach(k=>{
       const el=document.getElementById('nr-'+k);if(el)el.value=r[k]||'';
     });
+    document.getElementById('nr-prev-task').value = r.prev_task||'';
+    document.getElementById('nr-prev-action').value = r.prev_action||'';
     document.getElementById('nr-save-btn').textContent='更新する';
     document.getElementById('nr-delete-btn').style.display='inline-flex';
     setChipValue('nr', r.supporter);
@@ -629,6 +635,8 @@ async function saveRecord(){
   const date = document.getElementById('nr-date').value;
   const supporter = document.getElementById('nr-supporter').value;
   const interview_count = parseInt(document.getElementById('nr-count').value)||null;
+  const prev_task = document.getElementById('nr-prev-task').value.trim();
+  const prev_action = document.getElementById('nr-prev-action').value.trim();
   const q1=document.getElementById('nr-q1').value.trim();
   const q2=document.getElementById('nr-q2').value.trim();
   const q3=document.getElementById('nr-q3').value.trim();
@@ -645,10 +653,10 @@ async function saveRecord(){
   const btn = document.getElementById('nr-save-btn');btn.disabled=true;
   try {
     if(editId){
-      await api('PATCH', `records?id=eq.${editId}`, {date,supporter,interview_count,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11});
+      await api('PATCH', `records?id=eq.${editId}`, {date,supporter,interview_count,prev_task,prev_action,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11});
       showToast('更新しました');
     } else {
-      await api('POST', 'records', {candidate_id:currentCandidateId,date,supporter,interview_count,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11});
+      await api('POST', 'records', {candidate_id:currentCandidateId,date,supporter,interview_count,prev_task,prev_action,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11});
       showToast('保存しました');
     }
     showScreen('screen-detail');
