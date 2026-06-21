@@ -176,6 +176,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
   <div class="field"><label>③ 店舗内の変化</label><textarea id="nr-changes" placeholder="最近の店舗内の変化や気づきを記入してください"></textarea></div>
   <div class="field"><label>④ その他</label><textarea id="nr-notes" placeholder="その他、共有事項や補足があれば記入してください"></textarea></div>
   <div class="field"><label>支援部所感</label><textarea id="nr-impression" placeholder="支援部として感じたこと、今後の方針など"></textarea></div>
+
+  <div style="background:linear-gradient(135deg,var(--pk1),var(--lv1));border-radius:var(--radius);padding:14px 16px;margin:1.25rem 0 1rem;">
+    <div style="font-size:13px;font-weight:600;color:var(--pk5);margin-bottom:2px;">チーフ候補者 面談シート</div>
+    <div style="font-size:11px;color:var(--text2);">各質問にエピソード・事実ベースで記入してください</div>
+  </div>
+
+  <div class="field"><label>面談回数</label><input type="number" id="nr-count" placeholder="例：1" min="1" style="max-width:120px;"></div>
+
+  <div style="font-size:11px;font-weight:600;color:var(--pk5);margin-bottom:8px;margin-top:4px;">① 振り返り（前回面談からの変化・行動確認）※初回は省略</div>
+  <div class="field"><label>Q1. 前回「次回までにやる」と決めたこと、実際にできましたか？</label><textarea id="nr-q1" placeholder="エピソード・事実を記入"></textarea></div>
+  <div class="field"><label>Q2. やってみてどうでしたか？うまくいったこと・いかなかったことを教えてください。</label><textarea id="nr-q2" placeholder="エピソード・事実を記入"></textarea></div>
+  <div class="field"><label>Q3. 店舗やスタッフの様子で、何か変化に気づいたことはありますか？</label><textarea id="nr-q3" placeholder="エピソード・事実を記入"></textarea></div>
+
+  <div style="font-size:11px;font-weight:600;color:var(--pk5);margin-bottom:8px;margin-top:4px;">② 現状確認（3つの評価軸に対するエピソード確認）</div>
+  <div class="field"><label>Q4. 最近、誰かに言われる前に自分から気づいて動いた場面はありましたか？（清掃・整備・備品など）<br><span style="color:var(--lv4);">軸①：店舗環境への主体的な関与</span></label><textarea id="nr-q4" placeholder="エピソード・事実を記入"></textarea></div>
+  <div class="field"><label>Q5. 困っているスタッフや後輩に、自分から声をかけたり助けに入った場面はありましたか？<br><span style="color:var(--lv4);">軸③：スタッフへの自発的な声掛け・フォロー</span></label><textarea id="nr-q5" placeholder="エピソード・事実を記入"></textarea></div>
+  <div class="field"><label>Q6. うまくいかなかった場面で、自分の行動を振り返ったことはありますか？そのときどう考えましたか？<br><span style="color:var(--lv4);">軸④：自責での振り返り</span></label><textarea id="nr-q6" placeholder="エピソード・事実を記入"></textarea></div>
+
+  <div style="font-size:11px;font-weight:600;color:var(--pk5);margin-bottom:8px;margin-top:4px;">③ 課題と行動（自己認識・自責思考の確認）</div>
+  <div class="field"><label>Q7. 今、自分が一番できていないと感じていることは何ですか？</label><textarea id="nr-q7" placeholder="エピソード・事実を記入"></textarea></div>
+  <div class="field"><label>Q8. それはなぜだと思いますか？</label><textarea id="nr-q8" placeholder="エピソード・事実を記入"></textarea></div>
+  <div class="field"><label>Q9. それに対して、今何か意識していることや取り組んでいることはありますか？</label><textarea id="nr-q9" placeholder="エピソード・事実を記入"></textarea></div>
+
+  <div style="font-size:11px;font-weight:600;color:var(--pk5);margin-bottom:8px;margin-top:4px;">④ 次回までの行動（具体的な行動の約束）※最終面談は省略</div>
+  <div class="field"><label>Q10. 今日話したことをふまえて、次回の面談までに具体的に取り組むことを一つ決めましょう。</label><textarea id="nr-q10" placeholder="エピソード・事実を記入"></textarea></div>
+  <div class="field"><label>Q11. それをいつ・どんな場面でやりますか？</label><textarea id="nr-q11" placeholder="エピソード・事実を記入"></textarea></div>
+
   <div style="display:flex;gap:8px;margin-top:1.25rem;flex-wrap:wrap;align-items:center;">
     <button class="btn-ghost" onclick="showScreen('screen-detail')">キャンセル</button>
     <button class="btn-primary" id="nr-save-btn" onclick="saveRecord()">記録を保存</button>
@@ -406,6 +433,21 @@ async function loadDetail(){
         ${r.notes?`<div class="record-label">④ その他</div><div class="record-text">${r.notes}</div>`:''}
         <div class="record-label" style="color:var(--lv4);margin-top:14px;border-top:1px solid var(--lv1);padding-top:10px;">支援部所感</div>
         <div class="record-text">${r.impression||'—'}</div>
+        ${(r.q1||r.q2||r.q3||r.q4||r.q5||r.q6||r.q7||r.q8||r.q9||r.q10||r.q11)?`
+        <div style="background:linear-gradient(135deg,var(--pk1),var(--lv1));border-radius:var(--radius-sm);padding:10px 12px;margin-top:14px;">
+          <div style="font-size:11px;font-weight:600;color:var(--pk5);margin-bottom:8px;">チーフ候補者 面談シート${r.interview_count?' （第'+r.interview_count+'回）':''}</div>
+          ${r.q1?`<div class="record-label">Q1. 前回決めたこと、できましたか？</div><div class="record-text">${r.q1}</div>`:''}
+          ${r.q2?`<div class="record-label">Q2. やってみてどうでしたか？</div><div class="record-text">${r.q2}</div>`:''}
+          ${r.q3?`<div class="record-label">Q3. 店舗・スタッフの変化</div><div class="record-text">${r.q3}</div>`:''}
+          ${r.q4?`<div class="record-label">Q4. 自分から気づいて動いた場面（軸①）</div><div class="record-text">${r.q4}</div>`:''}
+          ${r.q5?`<div class="record-label">Q5. スタッフへの声掛け・フォロー（軸③）</div><div class="record-text">${r.q5}</div>`:''}
+          ${r.q6?`<div class="record-label">Q6. 自責での振り返り（軸④）</div><div class="record-text">${r.q6}</div>`:''}
+          ${r.q7?`<div class="record-label">Q7. 一番できていないと感じること</div><div class="record-text">${r.q7}</div>`:''}
+          ${r.q8?`<div class="record-label">Q8. それはなぜ？</div><div class="record-text">${r.q8}</div>`:''}
+          ${r.q9?`<div class="record-label">Q9. 意識していること・取り組み</div><div class="record-text">${r.q9}</div>`:''}
+          ${r.q10?`<div class="record-label">Q10. 次回までに取り組むこと</div><div class="record-text">${r.q10}</div>`:''}
+          ${r.q11?`<div class="record-label">Q11. いつ・どんな場面で？</div><div class="record-text">${r.q11}</div>`:''}
+        </div>`:''}
       </div>`).join('');
   } catch(e){
     el.innerHTML='<div class="empty-state">データの取得に失敗しました</div>';
@@ -528,6 +570,10 @@ function resetRecordForm(){
   document.getElementById('nr-changes').value='';
   document.getElementById('nr-notes').value='';
   document.getElementById('nr-impression').value='';
+  document.getElementById('nr-count').value='';
+  ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11'].forEach(k=>{
+    const el=document.getElementById('nr-'+k);if(el)el.value='';
+  });
   document.getElementById('nr-save-btn').textContent='記録を保存';
   document.getElementById('nr-delete-btn').style.display='none';
   document.querySelectorAll('#nr-chips .chip').forEach(c=>c.classList.remove('selected'));
@@ -545,6 +591,10 @@ async function editRecord(recordId){
     document.getElementById('nr-changes').value = r.changes||'';
     document.getElementById('nr-notes').value = r.notes||'';
     document.getElementById('nr-impression').value = r.impression||'';
+    document.getElementById('nr-count').value = r.interview_count||'';
+    ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11'].forEach(k=>{
+      const el=document.getElementById('nr-'+k);if(el)el.value=r[k]||'';
+    });
     document.getElementById('nr-save-btn').textContent='更新する';
     document.getElementById('nr-delete-btn').style.display='inline-flex';
     setChipValue('nr', r.supporter);
@@ -561,15 +611,27 @@ async function saveRecord(){
   const changes = document.getElementById('nr-changes').value.trim();
   const notes = document.getElementById('nr-notes').value.trim();
   const impression = document.getElementById('nr-impression').value.trim();
+  const interview_count = parseInt(document.getElementById('nr-count').value)||null;
+  const q1=document.getElementById('nr-q1').value.trim();
+  const q2=document.getElementById('nr-q2').value.trim();
+  const q3=document.getElementById('nr-q3').value.trim();
+  const q4=document.getElementById('nr-q4').value.trim();
+  const q5=document.getElementById('nr-q5').value.trim();
+  const q6=document.getElementById('nr-q6').value.trim();
+  const q7=document.getElementById('nr-q7').value.trim();
+  const q8=document.getElementById('nr-q8').value.trim();
+  const q9=document.getElementById('nr-q9').value.trim();
+  const q10=document.getElementById('nr-q10').value.trim();
+  const q11=document.getElementById('nr-q11').value.trim();
   const editId = document.getElementById('nr-edit-id').value;
   if(!date||!supporter){alert('面談日と担当支援部を入力してください');return;}
   const btn = document.getElementById('nr-save-btn');btn.disabled=true;
   try {
     if(editId){
-      await api('PATCH', `records?id=eq.${editId}`, {date,supporter,issues,actions,changes,notes,impression});
+      await api('PATCH', `records?id=eq.${editId}`, {date,supporter,issues,actions,changes,notes,impression,interview_count,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11});
       showToast('更新しました');
     } else {
-      await api('POST', 'records', {candidate_id:currentCandidateId,date,supporter,issues,actions,changes,notes,impression});
+      await api('POST', 'records', {candidate_id:currentCandidateId,date,supporter,issues,actions,changes,notes,impression,interview_count,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11});
       showToast('保存しました');
     }
     showScreen('screen-detail');
