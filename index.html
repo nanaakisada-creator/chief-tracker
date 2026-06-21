@@ -140,6 +140,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
       <button class="btn-primary" id="detail-add-btn" onclick="detailAddClick()" style="padding:8px 14px;font-size:12px;"><i class="ti ti-plus"></i>面談追加</button>
     </div>
   </div>
+  <div id="pre-tasks-section" style="border:1px solid var(--lv2);border-radius:var(--radius);padding:14px 16px;margin-bottom:1.25rem;background:var(--card);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <div style="font-size:13px;font-weight:600;color:var(--pk5);">研修後〜1回目面談までの実施事項</div>
+      <button class="icon-btn" id="pre-tasks-edit-btn" onclick="togglePreTasks()" title="編集"><i class="ti ti-edit"></i></button>
+    </div>
+    <div id="pre-tasks-display" style="font-size:13px;color:var(--text1);line-height:1.65;white-space:pre-wrap;min-height:20px;"></div>
+    <div id="pre-tasks-form" style="display:none;">
+      <textarea id="pre-tasks-input" style="width:100%;min-height:100px;resize:vertical;font-size:13px;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--lv2);background:var(--lv1);color:var(--text1);line-height:1.6;outline:none;font-family:inherit;" placeholder="研修後から1回目の面談までに実施することを記入してください"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn-ghost" style="padding:6px 14px;font-size:12px;" onclick="cancelPreTasks()">キャンセル</button>
+        <button class="btn-primary" style="padding:6px 14px;font-size:12px;" onclick="savePreTasks()">保存</button>
+      </div>
+    </div>
+  </div>
+
   <div style="display:flex;border-bottom:1.5px solid var(--lv2);margin-bottom:1.25rem;">
     <button class="tab-btn active" id="tab-records" onclick="switchTab('records')">面談履歴</button>
     <button class="tab-btn" id="tab-evals" onclick="switchTab('evals')">店舗パートナー評価</button>
@@ -375,6 +390,31 @@ function detailAddClick(){
   else showScreen('screen-new-record','new');
 }
 
+function togglePreTasks(){
+  const form = document.getElementById('pre-tasks-form');
+  const display = document.getElementById('pre-tasks-display');
+  form.style.display = form.style.display==='none' ? 'block' : 'none';
+  display.style.display = display.style.display==='none' ? 'block' : 'none';
+}
+function cancelPreTasks(){
+  const pt = currentCandidate ? (currentCandidate.pre_tasks||'') : '';
+  document.getElementById('pre-tasks-input').value = pt;
+  document.getElementById('pre-tasks-form').style.display='none';
+  document.getElementById('pre-tasks-display').style.display='block';
+}
+async function savePreTasks(){
+  const pre_tasks = document.getElementById('pre-tasks-input').value.trim();
+  try {
+    await api('PATCH', `candidates?id=eq.${currentCandidateId}`, {pre_tasks});
+    if(currentCandidate) currentCandidate.pre_tasks = pre_tasks;
+    document.getElementById('pre-tasks-display').textContent = pre_tasks || '（未記入）';
+    document.getElementById('pre-tasks-display').style.color = pre_tasks ? 'var(--text1)' : 'var(--text3)';
+    document.getElementById('pre-tasks-form').style.display='none';
+    document.getElementById('pre-tasks-display').style.display='block';
+    showToast('保存しました');
+  } catch(e){ showToast('保存に失敗しました','error'); }
+}
+
 async function loadCandidates(){
   const el = document.getElementById('candidates-list');
   el.innerHTML = '<div class="loading"><span class="spinner"></span>読み込み中...</div>';
@@ -408,6 +448,12 @@ async function loadDetail(){
     document.getElementById('detail-avatar').textContent = initials(currentCandidate.name);
     document.getElementById('detail-name').textContent = currentCandidate.name;
     document.getElementById('detail-meta').innerHTML = `<i class="ti ti-building-store" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>${currentCandidate.store}　<i class="ti ti-user" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>${currentCandidate.supporter}`;
+    const pt = currentCandidate.pre_tasks||'';
+    document.getElementById('pre-tasks-display').textContent = pt || '（未記入）';
+    document.getElementById('pre-tasks-display').style.color = pt ? 'var(--text1)' : 'var(--text3)';
+    document.getElementById('pre-tasks-input').value = pt;
+    document.getElementById('pre-tasks-form').style.display='none';
+    document.getElementById('pre-tasks-display').style.display='block';
     const records = await api('GET', `records?candidate_id=eq.${currentCandidateId}&order=date.desc`);
     if(!records.length){el.innerHTML='<div class="empty-state">面談記録がまだありません</div>';return;}
     el.innerHTML = records.map(r=>`
