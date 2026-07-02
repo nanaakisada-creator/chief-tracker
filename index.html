@@ -733,15 +733,17 @@ async function saveEval(){
   const score_followup = parseInt(document.getElementById('ne-followup').value)||null;
   const score_attitude = parseInt(document.getElementById('ne-attitude').value)||null;
   const partner_comment = document.getElementById('ne-partner-comment').value.trim();
+  const eval_count = parseInt(document.getElementById('ne-count').value)||null;
+  const partner_name = document.getElementById('ne-partner-name').value.trim();
   const editId = document.getElementById('ne-edit-id').value;
   if(!date||!evaluator){alert('評価日と評価者を入力してください');return;}
   const btn = document.getElementById('ne-save-btn');btn.disabled=true;
   try {
     if(editId){
-      await api('PATCH', `evaluations?id=eq.${editId}`, {date,evaluator,score_5s,score_communication,score_followup,score_attitude,partner_comment});
+      await api('PATCH', `evaluations?id=eq.${editId}`, {date,evaluator,score_5s,score_communication,score_followup,score_attitude,partner_comment,eval_count,partner_name});
       showToast('更新しました');
     } else {
-      await api('POST', 'evaluations', {candidate_id:currentCandidateId,date,evaluator,score_5s,score_communication,score_followup,score_attitude,partner_comment});
+      await api('POST', 'evaluations', {candidate_id:currentCandidateId,date,evaluator,score_5s,score_communication,score_followup,score_attitude,partner_comment,eval_count,partner_name});
       showToast('保存しました');
     }
     currentTab='evals';
