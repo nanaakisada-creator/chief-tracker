@@ -143,7 +143,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
   <div id="pre-tasks-section" style="border:1px solid var(--lv2);border-radius:var(--radius);padding:14px 16px;margin-bottom:1.25rem;background:var(--card);">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
       <div style="font-size:13px;font-weight:600;color:var(--pk5);">研修後〜1回目面談までの実施事項</div>
-      <button class="icon-btn" onclick="togglePreTasks()" title="編集"><i class="ti ti-edit"></i></button>
+      <button class="icon-btn" id="pre-tasks-edit-btn" onclick="togglePreTasks()" title="編集"><i class="ti ti-edit"></i></button>
     </div>
     <div id="pre-tasks-display" style="font-size:13px;color:var(--text1);line-height:1.65;white-space:pre-wrap;min-height:20px;"></div>
     <div id="pre-tasks-form" style="display:none;">
@@ -154,12 +154,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
       </div>
     </div>
   </div>
+
   <div style="display:flex;border-bottom:1.5px solid var(--lv2);margin-bottom:1.25rem;">
     <button class="tab-btn active" id="tab-records" onclick="switchTab('records')">面談履歴</button>
     <button class="tab-btn" id="tab-evals" onclick="switchTab('evals')">店舗パートナー評価</button>
   </div>
-  <div id="tab-records-content"><div id="records-list"></div></div>
-  <div id="tab-evals-content" style="display:none;"><div id="evals-list"></div></div>
+  <div id="tab-records-content">
+    <div id="records-list"></div>
+  </div>
+  <div id="tab-evals-content" style="display:none;">
+    <div id="evals-list"></div>
+  </div>
 </div>
 
 <div class="screen" id="screen-new-record">
@@ -181,33 +186,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
       <input type="hidden" id="nr-edit-id">
     </div>
   </div>
+
+
   <div style="background:linear-gradient(135deg,var(--pk1),var(--lv1));border-radius:var(--radius);padding:14px 16px;margin:1.25rem 0 1rem;">
     <div style="font-size:13px;font-weight:600;color:var(--pk5);margin-bottom:2px;">チーフ候補者 面談シート</div>
     <div style="font-size:11px;color:var(--text2);">各質問にエピソード・事実ベースで記入してください</div>
   </div>
+
   <div class="field"><label>面談回数</label><input type="number" id="nr-count" placeholder="例：1" min="1" style="max-width:120px;"></div>
+
   <div style="font-size:11px;font-weight:600;color:var(--pk5);margin-bottom:8px;margin-top:4px;">① 振り返り（前回面談からの変化・行動確認）※初回は省略</div>
   <div class="field"><label>前回の課題</label><textarea id="nr-prev-task" placeholder="前回の面談で課題としていたことを記入"></textarea></div>
   <div class="field"><label>Q1. 前回「次回までにやる」と決めたこと、実際にできましたか？</label><textarea id="nr-q1" placeholder="エピソード・事実を記入"></textarea></div>
   <div class="field"><label>Q1-2. 課題に対して行動したこと</label><textarea id="nr-prev-action" placeholder="前回の課題に対して実際に行動したことを記入"></textarea></div>
   <div class="field"><label>Q2. やってみてどうでしたか？うまくいったこと・いかなかったことを教えてください。</label><textarea id="nr-q2" placeholder="エピソード・事実を記入"></textarea></div>
   <div class="field"><label>Q3. 店舗やスタッフの様子で、何か変化に気づいたことはありますか？</label><textarea id="nr-q3" placeholder="エピソード・事実を記入"></textarea></div>
+
   <div style="font-size:11px;font-weight:600;color:var(--pk5);margin-bottom:8px;margin-top:4px;">② 現状確認（3つの評価軸に対するエピソード確認）</div>
   <div class="field"><label>Q4. 最近、誰かに言われる前に自分から気づいて動いた場面はありましたか？（清掃・整備・備品など）<br><span style="color:var(--lv4);">軸①：店舗環境への主体的な関与</span></label><textarea id="nr-q4" placeholder="エピソード・事実を記入"></textarea></div>
   <div class="field"><label>Q5. 困っているスタッフや後輩に、自分から声をかけたり助けに入った場面はありましたか？<br><span style="color:var(--lv4);">軸③：スタッフへの自発的な声掛け・フォロー</span></label><textarea id="nr-q5" placeholder="エピソード・事実を記入"></textarea></div>
   <div class="field"><label>Q6. うまくいかなかった場面で、自分の行動を振り返ったことはありますか？そのときどう考えましたか？<br><span style="color:var(--lv4);">軸④：自責での振り返り</span></label><textarea id="nr-q6" placeholder="エピソード・事実を記入"></textarea></div>
+
   <div style="font-size:11px;font-weight:600;color:var(--pk5);margin-bottom:8px;margin-top:4px;">③ 課題と行動（自己認識・自責思考の確認）</div>
   <div class="field"><label>Q7. 今、自分が一番できていないと感じていることは何ですか？</label><textarea id="nr-q7" placeholder="エピソード・事実を記入"></textarea></div>
   <div class="field"><label>Q8. それはなぜだと思いますか？</label><textarea id="nr-q8" placeholder="エピソード・事実を記入"></textarea></div>
   <div class="field"><label>Q9. それに対して、今何か意識していることや取り組んでいることはありますか？</label><textarea id="nr-q9" placeholder="エピソード・事実を記入"></textarea></div>
+
   <div style="font-size:11px;font-weight:600;color:var(--pk5);margin-bottom:8px;margin-top:4px;">④ 次回までの行動（具体的な行動の約束）※最終面談は省略</div>
   <div class="field"><label>Q10. 今日話したことをふまえて、次回の面談までに具体的に取り組むことを一つ決めましょう。</label><textarea id="nr-q10" placeholder="エピソード・事実を記入"></textarea></div>
   <div class="field"><label>Q11. それをいつ・どんな場面でやりますか？</label><textarea id="nr-q11" placeholder="エピソード・事実を記入"></textarea></div>
+
   <div style="background:linear-gradient(135deg,var(--pk1),var(--lv1));border-radius:var(--radius);padding:14px 16px;margin:1.25rem 0 1rem;">
     <div style="font-size:13px;font-weight:600;color:var(--pk5);margin-bottom:2px;">支援部メモ</div>
     <div style="font-size:11px;color:var(--text2);">面談後の所感・判断メモ（候補者には非開示）</div>
   </div>
   <div class="field"><label>支援部所感</label><textarea id="nr-impression" placeholder="支援部として感じたこと、今後の方針、候補者の状態など"></textarea></div>
+
   <div style="display:flex;gap:8px;margin-top:1.25rem;flex-wrap:wrap;align-items:center;">
     <button class="btn-ghost" onclick="showScreen('screen-detail')">キャンセル</button>
     <button class="btn-primary" id="nr-save-btn" onclick="saveRecord()">記録を保存</button>
@@ -221,6 +235,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
   <div class="page-sub" id="ne-candidate-label"></div>
   <div class="row2">
     <div class="field"><label>評価日</label><input type="date" id="ne-date"></div>
+    <div class="field"><label>評価回数</label><input type="number" id="ne-count" placeholder="例：1" min="1"></div>
+  </div>
+  <div class="row2">
+    <div class="field"><label>評価したパートナー名</label><input type="text" id="ne-partner-name" placeholder="例：田中 さくら"></div>
     <div class="field">
       <label>評価者（支援部）</label>
       <div class="chips" id="ne-chips">
@@ -234,7 +252,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
       <input type="hidden" id="ne-edit-id">
     </div>
   </div>
-  <div class="field"><label>5S</label>
+  <div class="field">
+    <label>5S</label>
     <div class="star-row" id="stars-5s">
       <span class="star" onclick="setStar('5s',1)">★</span>
       <span class="star" onclick="setStar('5s',2)">★</span>
@@ -242,7 +261,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
     </div>
     <input type="hidden" id="ne-5s">
   </div>
-  <div class="field"><label>コミュニケーション・連携</label>
+  <div class="field">
+    <label>コミュニケーション・連携</label>
     <div class="star-row" id="stars-communication">
       <span class="star" onclick="setStar('communication',1)">★</span>
       <span class="star" onclick="setStar('communication',2)">★</span>
@@ -250,7 +270,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
     </div>
     <input type="hidden" id="ne-communication">
   </div>
-  <div class="field"><label>フォロー・声掛け</label>
+  <div class="field">
+    <label>フォロー・声掛け</label>
     <div class="star-row" id="stars-followup">
       <span class="star" onclick="setStar('followup',1)">★</span>
       <span class="star" onclick="setStar('followup',2)">★</span>
@@ -258,7 +279,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
     </div>
     <input type="hidden" id="ne-followup">
   </div>
-  <div class="field"><label>業務への取り組み・姿勢</label>
+  <div class="field">
+    <label>業務への取り組み・姿勢</label>
     <div class="star-row" id="stars-attitude">
       <span class="star" onclick="setStar('attitude',1)">★</span>
       <span class="star" onclick="setStar('attitude',2)">★</span>
@@ -284,7 +306,12 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 async function api(method, path, body){
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
     method,
-    headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation'},
+    headers:{
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
     body: body ? JSON.stringify(body) : undefined
   });
   if(!res.ok){ const e=await res.text(); throw new Error(e); }
@@ -292,21 +319,30 @@ async function api(method, path, body){
   return text ? JSON.parse(text) : [];
 }
 
-let currentCandidateId=null, currentCandidate=null, currentTab='records', currentFilter='all', allCandidates=[];
+let currentCandidateId = null;
+let currentCandidate = null;
+let currentTab = 'records';
+let currentFilter = 'all';
+let allCandidates = [];
 
 function setFilter(val, el){
-  currentFilter=val;
+  currentFilter = val;
   document.querySelectorAll('#screen-list .tab-btn').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
   renderCandidateList();
 }
 
 function renderCandidateList(){
-  const el=document.getElementById('candidates-list');
-  const list=currentFilter==='all'?allCandidates:allCandidates.filter(c=>c.supporter===currentFilter);
-  document.getElementById('candidate-count').textContent=currentFilter==='all'?`${allCandidates.length}名登録中`:`${currentFilter}担当：${list.length}名`;
-  if(!list.length){el.innerHTML='<div class="empty-state"><i class="ti ti-heart" style="font-size:28px;display:block;margin:0 auto 10px;color:var(--pk3)"></i>該当する候補者がいません</div>';return;}
-  el.innerHTML=list.map(c=>`
+  const el = document.getElementById('candidates-list');
+  const list = currentFilter==='all' ? allCandidates : allCandidates.filter(c=>c.supporter===currentFilter);
+  document.getElementById('candidate-count').textContent = currentFilter==='all'
+    ? `${allCandidates.length}名登録中`
+    : `${currentFilter}担当：${list.length}名`;
+  if(!list.length){
+    el.innerHTML='<div class="empty-state"><i class="ti ti-heart" style="font-size:28px;display:block;margin:0 auto 10px;color:var(--pk3)"></i>該当する候補者がいません</div>';
+    return;
+  }
+  el.innerHTML = list.map(c=>`
     <div class="candidate-card" onclick="openCandidate(${c.id})">
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <div style="display:flex;align-items:center;gap:12px;">
@@ -324,31 +360,42 @@ function renderCandidateList(){
     </div>`).join('');
 }
 
-function showToast(msg,type='success'){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>t.classList.remove('show'),2000);}
+function showToast(msg, type='success'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(()=>t.classList.remove('show'), 2000);
+}
 function initials(n){const p=n.trim().split(/\s+/);return p.length>=2?p[0].slice(-1)+p[1].slice(0,1):n.slice(0,2);}
 function fmtDate(d){if(!d)return'';const dt=new Date(d);return`${dt.getFullYear()}年${dt.getMonth()+1}月${dt.getDate()}日`;}
-function starsHtml(val){return[1,2,3].map(i=>`<span class="star-d${i<=(val||0)?' on':''}">★</span>`).join('');}
+function starsHtml(val){
+  return [1,2,3].map(i=>`<span class="star-d${i<=(val||0)?' on':''}">★</span>`).join('');
+}
 
-function showScreen(id,mode){
+function showScreen(id, mode){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
   if(id==='screen-list') loadCandidates();
   if(id==='screen-detail') loadDetail();
-  if(id==='screen-new-candidate'&&mode==='new') resetCandidateForm();
-  if(id==='screen-new-record'&&mode==='new') resetRecordForm();
-  if(id==='screen-new-eval'&&mode==='new') resetEvalForm();
+  if(id==='screen-new-candidate' && mode==='new') resetCandidateForm();
+  if(id==='screen-new-record' && mode==='new') resetRecordForm();
+  if(id==='screen-new-eval' && mode==='new') resetEvalForm();
 }
 
 function switchTab(tab){
-  currentTab=tab;
-  document.getElementById('tab-records').classList.toggle('active',tab==='records');
-  document.getElementById('tab-evals').classList.toggle('active',tab==='evals');
-  document.getElementById('tab-records-content').style.display=tab==='records'?'block':'none';
-  document.getElementById('tab-evals-content').style.display=tab==='evals'?'block':'none';
-  const addBtn=document.getElementById('detail-add-btn');
-  if(tab==='evals'){addBtn.innerHTML='<i class="ti ti-plus"></i>評価を追加';loadEvals();}
-  else addBtn.innerHTML='<i class="ti ti-plus"></i>面談追加';
+  currentTab = tab;
+  document.getElementById('tab-records').classList.toggle('active', tab==='records');
+  document.getElementById('tab-evals').classList.toggle('active', tab==='evals');
+  document.getElementById('tab-records-content').style.display = tab==='records' ? 'block' : 'none';
+  document.getElementById('tab-evals-content').style.display = tab==='evals' ? 'block' : 'none';
+  const addBtn = document.getElementById('detail-add-btn');
+  if(tab==='evals'){
+    addBtn.innerHTML='<i class="ti ti-plus"></i>評価を追加';
+    loadEvals();
+  } else {
+    addBtn.innerHTML='<i class="ti ti-plus"></i>面談追加';
+  }
 }
 
 function detailAddClick(){
@@ -357,63 +404,72 @@ function detailAddClick(){
 }
 
 function togglePreTasks(){
-  const form=document.getElementById('pre-tasks-form'),display=document.getElementById('pre-tasks-display');
-  form.style.display=form.style.display==='none'?'block':'none';
-  display.style.display=display.style.display==='none'?'block':'none';
+  const form = document.getElementById('pre-tasks-form');
+  const display = document.getElementById('pre-tasks-display');
+  form.style.display = form.style.display==='none' ? 'block' : 'none';
+  display.style.display = display.style.display==='none' ? 'block' : 'none';
 }
 function cancelPreTasks(){
-  const pt=currentCandidate?(currentCandidate.pre_tasks||''):'';
-  document.getElementById('pre-tasks-input').value=pt;
+  const pt = currentCandidate ? (currentCandidate.pre_tasks||'') : '';
+  document.getElementById('pre-tasks-input').value = pt;
   document.getElementById('pre-tasks-form').style.display='none';
   document.getElementById('pre-tasks-display').style.display='block';
 }
 async function savePreTasks(){
-  const pre_tasks=document.getElementById('pre-tasks-input').value.trim();
-  try{
-    await api('PATCH',`candidates?id=eq.${currentCandidateId}`,{pre_tasks});
-    if(currentCandidate) currentCandidate.pre_tasks=pre_tasks;
-    document.getElementById('pre-tasks-display').textContent=pre_tasks||'（未記入）';
-    document.getElementById('pre-tasks-display').style.color=pre_tasks?'var(--text1)':'var(--text3)';
+  const pre_tasks = document.getElementById('pre-tasks-input').value.trim();
+  try {
+    await api('PATCH', `candidates?id=eq.${currentCandidateId}`, {pre_tasks});
+    if(currentCandidate) currentCandidate.pre_tasks = pre_tasks;
+    document.getElementById('pre-tasks-display').textContent = pre_tasks || '（未記入）';
+    document.getElementById('pre-tasks-display').style.color = pre_tasks ? 'var(--text1)' : 'var(--text3)';
     document.getElementById('pre-tasks-form').style.display='none';
     document.getElementById('pre-tasks-display').style.display='block';
     showToast('保存しました');
-  }catch(e){showToast('保存に失敗しました','error');}
+  } catch(e){ showToast('保存に失敗しました','error'); }
 }
 
 async function loadCandidates(){
-  const el=document.getElementById('candidates-list');
-  el.innerHTML='<div class="loading"><span class="spinner"></span>読み込み中...</div>';
-  try{
-    allCandidates=await api('GET','candidates?select=*,records(id)&order=supporter.asc,created_at.asc');
+  const el = document.getElementById('candidates-list');
+  el.innerHTML = '<div class="loading"><span class="spinner"></span>読み込み中...</div>';
+  try {
+    allCandidates = await api('GET', 'candidates?select=*,records(id)&order=supporter.asc,created_at.asc');
     renderCandidateList();
-  }catch(e){el.innerHTML='<div class="empty-state">データの取得に失敗しました</div>';showToast('読み込みエラー','error');}
+  } catch(e){
+    el.innerHTML='<div class="empty-state">データの取得に失敗しました</div>';
+    showToast('読み込みエラー', 'error');
+  }
 }
 
-async function openCandidate(id){currentCandidateId=id;currentTab='records';showScreen('screen-detail');}
+async function openCandidate(id){
+  currentCandidateId = id;
+  currentTab = 'records';
+  showScreen('screen-detail');
+}
 
 async function loadDetail(){
-  const el=document.getElementById('records-list');
-  el.innerHTML='<div class="loading"><span class="spinner"></span>読み込み中...</div>';
+  const el = document.getElementById('records-list');
+  el.innerHTML = '<div class="loading"><span class="spinner"></span>読み込み中...</div>';
   document.getElementById('tab-records').classList.add('active');
   document.getElementById('tab-evals').classList.remove('active');
   document.getElementById('tab-records-content').style.display='block';
   document.getElementById('tab-evals-content').style.display='none';
   document.getElementById('detail-add-btn').innerHTML='<i class="ti ti-plus"></i>面談追加';
-  try{
-    const candidates=await api('GET',`candidates?id=eq.${currentCandidateId}&select=*`);
-    currentCandidate=candidates[0];if(!currentCandidate)return;
-    document.getElementById('detail-avatar').textContent=initials(currentCandidate.name);
-    document.getElementById('detail-name').textContent=currentCandidate.name;
-    document.getElementById('detail-meta').innerHTML=`<i class="ti ti-building-store" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>${currentCandidate.store}　<i class="ti ti-user" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>${currentCandidate.supporter}`;
-    const pt=currentCandidate.pre_tasks||'';
-    document.getElementById('pre-tasks-display').textContent=pt||'（未記入）';
-    document.getElementById('pre-tasks-display').style.color=pt?'var(--text1)':'var(--text3)';
-    document.getElementById('pre-tasks-input').value=pt;
+  try {
+    const candidates = await api('GET', `candidates?id=eq.${currentCandidateId}&select=*`);
+    currentCandidate = candidates[0];
+    if(!currentCandidate) return;
+    document.getElementById('detail-avatar').textContent = initials(currentCandidate.name);
+    document.getElementById('detail-name').textContent = currentCandidate.name;
+    document.getElementById('detail-meta').innerHTML = `<i class="ti ti-building-store" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>${currentCandidate.store}　<i class="ti ti-user" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>${currentCandidate.supporter}`;
+    const pt = currentCandidate.pre_tasks||'';
+    document.getElementById('pre-tasks-display').textContent = pt || '（未記入）';
+    document.getElementById('pre-tasks-display').style.color = pt ? 'var(--text1)' : 'var(--text3)';
+    document.getElementById('pre-tasks-input').value = pt;
     document.getElementById('pre-tasks-form').style.display='none';
     document.getElementById('pre-tasks-display').style.display='block';
-    const records=await api('GET',`records?candidate_id=eq.${currentCandidateId}&order=date.desc`);
+    const records = await api('GET', `records?candidate_id=eq.${currentCandidateId}&order=date.desc`);
     if(!records.length){el.innerHTML='<div class="empty-state">面談記録がまだありません</div>';return;}
-    el.innerHTML=records.map(r=>`
+    el.innerHTML = records.map(r=>`
       <div class="record-item">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
           <span class="record-date-chip"><i class="ti ti-calendar" style="font-size:11px"></i>${fmtDate(r.date)}</span>
@@ -422,12 +478,13 @@ async function loadDetail(){
             <button class="icon-btn" onclick="editRecord(${r.id})" title="編集"><i class="ti ti-edit"></i></button>
           </div>
         </div>
+
         ${(r.q1||r.q2||r.q3||r.q4||r.q5||r.q6||r.q7||r.q8||r.q9||r.q10||r.q11)?`
-        <div style="background:linear-gradient(135deg,var(--pk1),var(--lv1));border-radius:var(--radius-sm);padding:10px 12px;margin-top:8px;">
+        <div style="background:linear-gradient(135deg,var(--pk1),var(--lv1));border-radius:var(--radius-sm);padding:10px 12px;margin-top:14px;">
           <div style="font-size:11px;font-weight:600;color:var(--pk5);margin-bottom:8px;">チーフ候補者 面談シート${r.interview_count?' （第'+r.interview_count+'回）':''}</div>
           ${r.prev_task?`<div class="record-label">前回の課題</div><div class="record-text">${r.prev_task}</div>`:''}
           ${r.q1?`<div class="record-label">Q1. 前回決めたこと、できましたか？</div><div class="record-text">${r.q1}</div>`:''}
-          ${r.prev_action?`<div class="record-label">Q1-2. 課題に対して行動したこと</div><div class="record-text">${r.prev_action}</div>`:''}
+          ${r.prev_action?`<div class="record-label">課題に対して行動したこと</div><div class="record-text">${r.prev_action}</div>`:''}
           ${r.q2?`<div class="record-label">Q2. やってみてどうでしたか？</div><div class="record-text">${r.q2}</div>`:''}
           ${r.q3?`<div class="record-label">Q3. 店舗・スタッフの変化</div><div class="record-text">${r.q3}</div>`:''}
           ${r.q4?`<div class="record-label">Q4. 自分から気づいて動いた場面（軸①）</div><div class="record-text">${r.q4}</div>`:''}
@@ -441,160 +498,269 @@ async function loadDetail(){
         </div>`:''}
         ${r.impression?`<div class="record-label" style="color:var(--lv4);margin-top:10px;border-top:1px solid var(--lv1);padding-top:10px;">支援部所感</div><div class="record-text">${r.impression}</div>`:''}
       </div>`).join('');
-  }catch(e){el.innerHTML='<div class="empty-state">データの取得に失敗しました</div>';showToast('読み込みエラー','error');}
+  } catch(e){
+    el.innerHTML='<div class="empty-state">データの取得に失敗しました</div>';
+    showToast('読み込みエラー', 'error');
+  }
 }
 
 async function loadEvals(){
-  const el=document.getElementById('evals-list');
-  el.innerHTML='<div class="loading"><span class="spinner"></span>読み込み中...</div>';
-  try{
-    const evals=await api('GET',`evaluations?candidate_id=eq.${currentCandidateId}&order=date.desc`);
+  const el = document.getElementById('evals-list');
+  el.innerHTML = '<div class="loading"><span class="spinner"></span>読み込み中...</div>';
+  try {
+    const evals = await api('GET', `evaluations?candidate_id=eq.${currentCandidateId}&order=date.desc`);
     if(!evals.length){el.innerHTML='<div class="empty-state">評価がまだありません</div>';return;}
-    const labels={'score_5s':'5S','score_communication':'コミュニケーション・連携','score_followup':'フォロー・声掛け','score_attitude':'業務への取り組み・姿勢'};
-    el.innerHTML=evals.map(e=>`
+    const labels = {'score_5s':'5S','score_communication':'コミュニケーション・連携','score_followup':'フォロー・声掛け','score_attitude':'業務への取り組み・姿勢'};
+    el.innerHTML = evals.map(e=>`
       <div class="eval-item">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-          <span class="record-date-chip"><i class="ti ti-calendar" style="font-size:11px"></i>${fmtDate(e.date)}</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span class="record-date-chip"><i class="ti ti-calendar" style="font-size:11px"></i>${fmtDate(e.date)}${e.eval_count?' （第'+e.eval_count+'回）':''}</span>
           <div style="display:flex;align-items:center;gap:6px;">
             <span class="record-by-chip">${e.evaluator}</span>
             <button class="icon-btn" onclick="editEval(${e.id})" title="編集"><i class="ti ti-edit"></i></button>
           </div>
         </div>
-        ${Object.entries(labels).map(([k,l])=>`<div class="eval-row"><span class="eval-label">${l}</span><div class="stars-display">${starsHtml(e[k])}</div></div>`).join('')}
+        ${e.partner_name?`<div style="font-size:12px;color:var(--text2);margin-bottom:8px;"><i class="ti ti-user" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>評価対象：${e.partner_name}</div>`:''}
+        ${Object.entries(labels).map(([k,l])=>`
+          <div class="eval-row">
+            <span class="eval-label">${l}</span>
+            <div class="stars-display">${starsHtml(e[k])}</div>
+          </div>`).join('')}
         ${e.partner_comment?`<div class="record-label" style="margin-top:10px;border-top:1px solid var(--lv1);padding-top:10px;">パートナーからの意見・コメント</div><div class="record-text">${e.partner_comment}</div>`:''}
       </div>`).join('');
-  }catch(e){el.innerHTML='<div class="empty-state">データの取得に失敗しました</div>';showToast('読み込みエラー','error');}
+  } catch(e){
+    el.innerHTML='<div class="empty-state">データの取得に失敗しました</div>';
+    showToast('読み込みエラー', 'error');
+  }
 }
 
-function setStar(key,val){document.getElementById(`ne-${key}`).value=val;document.querySelectorAll(`#stars-${key} .star`).forEach((s,i)=>s.classList.toggle('on',i<val));}
-function setStarValue(key,val){document.getElementById(`ne-${key}`).value=val||'';document.querySelectorAll(`#stars-${key} .star`).forEach((s,i)=>s.classList.toggle('on',i<(val||0)));}
-function selectChip(prefix,el,val){document.querySelectorAll(`#${prefix}-chips .chip`).forEach(c=>c.classList.remove('selected'));el.classList.add('selected');document.getElementById(`${prefix}-supporter`).value=val;}
-function setChipValue(prefix,val){document.querySelectorAll(`#${prefix}-chips .chip`).forEach(c=>c.classList.toggle('selected',c.textContent===val));document.getElementById(`${prefix}-supporter`).value=val;}
+function setStar(key, val){
+  document.getElementById(`ne-${key}`).value = val;
+  const stars = document.querySelectorAll(`#stars-${key} .star`);
+  stars.forEach((s,i)=>s.classList.toggle('on', i<val));
+}
+
+function setStarValue(key, val){
+  document.getElementById(`ne-${key}`).value = val||'';
+  const stars = document.querySelectorAll(`#stars-${key} .star`);
+  stars.forEach((s,i)=>s.classList.toggle('on', i<(val||0)));
+}
+
+function selectChip(prefix, el, val){
+  document.querySelectorAll(`#${prefix}-chips .chip`).forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById(`${prefix}-supporter`).value = val;
+}
+function setChipValue(prefix, val){
+  document.querySelectorAll(`#${prefix}-chips .chip`).forEach(c=>c.classList.toggle('selected', c.textContent===val));
+  document.getElementById(`${prefix}-supporter`).value = val;
+}
 
 function resetCandidateForm(){
   document.getElementById('nc-title').textContent='候補者を登録';
   document.getElementById('nc-sub').textContent='基本情報を入力してください';
-  ['nc-store','nc-name','nc-supporter','nc-edit-id'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('nc-store').value='';
+  document.getElementById('nc-name').value='';
+  document.getElementById('nc-supporter').value='';
+  document.getElementById('nc-edit-id').value='';
   document.getElementById('nc-save-btn').textContent='登録する';
   document.getElementById('nc-delete-btn').style.display='none';
   document.querySelectorAll('#nc-chips .chip').forEach(c=>c.classList.remove('selected'));
 }
 function editCandidate(){
-  if(!currentCandidate)return;
+  if(!currentCandidate) return;
   document.getElementById('nc-title').textContent='候補者情報を編集';
   document.getElementById('nc-sub').textContent='情報を更新してください';
-  document.getElementById('nc-store').value=currentCandidate.store;
-  document.getElementById('nc-name').value=currentCandidate.name;
-  document.getElementById('nc-edit-id').value=currentCandidate.id;
+  document.getElementById('nc-store').value = currentCandidate.store;
+  document.getElementById('nc-name').value = currentCandidate.name;
+  document.getElementById('nc-edit-id').value = currentCandidate.id;
   document.getElementById('nc-save-btn').textContent='更新する';
   document.getElementById('nc-delete-btn').style.display='inline-flex';
-  setChipValue('nc',currentCandidate.supporter);
+  setChipValue('nc', currentCandidate.supporter);
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-new-candidate').classList.add('active');
   window.scrollTo(0,0);
 }
 async function saveCandidate(){
-  const store=document.getElementById('nc-store').value.trim(),name=document.getElementById('nc-name').value.trim(),supporter=document.getElementById('nc-supporter').value,editId=document.getElementById('nc-edit-id').value;
+  const store = document.getElementById('nc-store').value.trim();
+  const name = document.getElementById('nc-name').value.trim();
+  const supporter = document.getElementById('nc-supporter').value;
+  const editId = document.getElementById('nc-edit-id').value;
   if(!store||!name||!supporter){alert('店舗名・氏名・担当支援部をすべて入力してください');return;}
-  const btn=document.getElementById('nc-save-btn');btn.disabled=true;
-  try{
-    if(editId){await api('PATCH',`candidates?id=eq.${editId}`,{store,name,supporter});showToast('更新しました');showScreen('screen-detail');}
-    else{await api('POST','candidates',{store,name,supporter});showToast('登録しました');showScreen('screen-list');}
-  }catch(e){showToast('保存に失敗しました','error');}finally{btn.disabled=false;}
+  const btn = document.getElementById('nc-save-btn');
+  btn.disabled = true;
+  try {
+    if(editId){
+      await api('PATCH', `candidates?id=eq.${editId}`, {store,name,supporter});
+      showToast('更新しました');showScreen('screen-detail');
+    } else {
+      await api('POST', 'candidates', {store,name,supporter});
+      showToast('登録しました');showScreen('screen-list');
+    }
+  } catch(e){showToast('保存に失敗しました','error');}
+  finally{btn.disabled=false;}
 }
 async function deleteCandidate(){
-  const editId=document.getElementById('nc-edit-id').value;if(!editId)return;
-  if(!confirm('この候補者と全ての記録を削除しますか？'))return;
-  try{await api('DELETE',`candidates?id=eq.${editId}`);showToast('削除しました');showScreen('screen-list');}
-  catch(e){showToast('削除に失敗しました','error');}
+  const editId = document.getElementById('nc-edit-id').value;
+  if(!editId) return;
+  if(!confirm('この候補者と全ての記録を削除しますか？')) return;
+  try {
+    await api('DELETE', `candidates?id=eq.${editId}`);
+    showToast('削除しました');showScreen('screen-list');
+  } catch(e){showToast('削除に失敗しました','error');}
 }
 
 function resetRecordForm(){
   document.getElementById('nr-title').textContent='面談記録を追加';
-  if(currentCandidate)document.getElementById('nr-candidate-label').textContent=`${currentCandidate.store}　${currentCandidate.name}`;
-  document.getElementById('nr-date').value=new Date().toISOString().slice(0,10);
-  document.getElementById('nr-supporter').value='';document.getElementById('nr-edit-id').value='';document.getElementById('nr-count').value='';
-  ['prev-task','prev-action','q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','impression'].forEach(k=>{const el=document.getElementById('nr-'+k);if(el)el.value='';});
-  document.getElementById('nr-save-btn').textContent='記録を保存';document.getElementById('nr-delete-btn').style.display='none';
+  if(currentCandidate) document.getElementById('nr-candidate-label').textContent=`${currentCandidate.store}　${currentCandidate.name}`;
+  document.getElementById('nr-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('nr-supporter').value='';
+  document.getElementById('nr-edit-id').value='';
+  document.getElementById('nr-count').value='';
+  ['prev-task','prev-action','q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','impression'].forEach(k=>{
+    const el=document.getElementById('nr-'+k);if(el)el.value='';
+  });
+  document.getElementById('nr-save-btn').textContent='記録を保存';
+  document.getElementById('nr-delete-btn').style.display='none';
   document.querySelectorAll('#nr-chips .chip').forEach(c=>c.classList.remove('selected'));
 }
 async function editRecord(recordId){
-  try{
-    const records=await api('GET',`records?id=eq.${recordId}&select=*`);const r=records[0];if(!r)return;
+  try {
+    const records = await api('GET', `records?id=eq.${recordId}&select=*`);
+    const r = records[0];if(!r) return;
     document.getElementById('nr-title').textContent='面談記録を編集';
-    if(currentCandidate)document.getElementById('nr-candidate-label').textContent=`${currentCandidate.store}　${currentCandidate.name}`;
-    document.getElementById('nr-date').value=r.date;document.getElementById('nr-edit-id').value=r.id;document.getElementById('nr-count').value=r.interview_count||'';
-    ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11'].forEach(k=>{const el=document.getElementById('nr-'+k);if(el)el.value=r[k]||'';});
-    document.getElementById('nr-prev-task').value=r.prev_task||'';
-    document.getElementById('nr-prev-action').value=r.prev_action||'';
-    document.getElementById('nr-impression').value=r.impression||'';
-    document.getElementById('nr-save-btn').textContent='更新する';document.getElementById('nr-delete-btn').style.display='inline-flex';
-    setChipValue('nr',r.supporter);
+    if(currentCandidate) document.getElementById('nr-candidate-label').textContent=`${currentCandidate.store}　${currentCandidate.name}`;
+    document.getElementById('nr-date').value = r.date;
+    document.getElementById('nr-edit-id').value = r.id;
+    document.getElementById('nr-count').value = r.interview_count||'';
+    ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11'].forEach(k=>{
+      const el=document.getElementById('nr-'+k);if(el)el.value=r[k]||'';
+    });
+    document.getElementById('nr-prev-task').value = r.prev_task||'';
+    document.getElementById('nr-prev-action').value = r.prev_action||'';
+    document.getElementById('nr-impression').value = r.impression||'';
+    document.getElementById('nr-save-btn').textContent='更新する';
+    document.getElementById('nr-delete-btn').style.display='inline-flex';
+    setChipValue('nr', r.supporter);
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-    document.getElementById('screen-new-record').classList.add('active');window.scrollTo(0,0);
-  }catch(e){showToast('読み込みエラー','error');}
+    document.getElementById('screen-new-record').classList.add('active');
+    window.scrollTo(0,0);
+  } catch(e){showToast('読み込みエラー','error');}
 }
 async function saveRecord(){
-  const date=document.getElementById('nr-date').value,supporter=document.getElementById('nr-supporter').value;
-  const interview_count=parseInt(document.getElementById('nr-count').value)||null;
-  const prev_task=document.getElementById('nr-prev-task').value.trim(),prev_action=document.getElementById('nr-prev-action').value.trim(),impression=document.getElementById('nr-impression').value.trim();
-  const q1=document.getElementById('nr-q1').value.trim(),q2=document.getElementById('nr-q2').value.trim(),q3=document.getElementById('nr-q3').value.trim(),q4=document.getElementById('nr-q4').value.trim(),q5=document.getElementById('nr-q5').value.trim(),q6=document.getElementById('nr-q6').value.trim(),q7=document.getElementById('nr-q7').value.trim(),q8=document.getElementById('nr-q8').value.trim(),q9=document.getElementById('nr-q9').value.trim(),q10=document.getElementById('nr-q10').value.trim(),q11=document.getElementById('nr-q11').value.trim();
-  const editId=document.getElementById('nr-edit-id').value;
+  const date = document.getElementById('nr-date').value;
+  const supporter = document.getElementById('nr-supporter').value;
+  const interview_count = parseInt(document.getElementById('nr-count').value)||null;
+  const prev_task = document.getElementById('nr-prev-task').value.trim();
+  const prev_action = document.getElementById('nr-prev-action').value.trim();
+  const impression = document.getElementById('nr-impression').value.trim();
+  const q1=document.getElementById('nr-q1').value.trim();
+  const q2=document.getElementById('nr-q2').value.trim();
+  const q3=document.getElementById('nr-q3').value.trim();
+  const q4=document.getElementById('nr-q4').value.trim();
+  const q5=document.getElementById('nr-q5').value.trim();
+  const q6=document.getElementById('nr-q6').value.trim();
+  const q7=document.getElementById('nr-q7').value.trim();
+  const q8=document.getElementById('nr-q8').value.trim();
+  const q9=document.getElementById('nr-q9').value.trim();
+  const q10=document.getElementById('nr-q10').value.trim();
+  const q11=document.getElementById('nr-q11').value.trim();
+  const editId = document.getElementById('nr-edit-id').value;
   if(!date||!supporter){alert('面談日と担当支援部を入力してください');return;}
-  const btn=document.getElementById('nr-save-btn');btn.disabled=true;
-  try{
-    if(editId){await api('PATCH',`records?id=eq.${editId}`,{date,supporter,interview_count,prev_task,prev_action,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11,impression});showToast('更新しました');}
-    else{await api('POST','records',{candidate_id:currentCandidateId,date,supporter,interview_count,prev_task,prev_action,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11,impression});showToast('保存しました');}
+  const btn = document.getElementById('nr-save-btn');btn.disabled=true;
+  try {
+    if(editId){
+      await api('PATCH', `records?id=eq.${editId}`, {date,supporter,interview_count,prev_task,prev_action,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11,impression});
+      showToast('更新しました');
+    } else {
+      await api('POST', 'records', {candidate_id:currentCandidateId,date,supporter,interview_count,prev_task,prev_action,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11,impression});
+      showToast('保存しました');
+    }
     showScreen('screen-detail');
-  }catch(e){showToast('保存に失敗しました','error');}finally{btn.disabled=false;}
+  } catch(e){showToast('保存に失敗しました','error');}
+  finally{btn.disabled=false;}
 }
 async function deleteRecord(){
-  const editId=document.getElementById('nr-edit-id').value;if(!editId)return;
-  if(!confirm('この面談記録を削除しますか？'))return;
-  try{await api('DELETE',`records?id=eq.${editId}`);showToast('削除しました');showScreen('screen-detail');}
-  catch(e){showToast('削除に失敗しました','error');}
+  const editId = document.getElementById('nr-edit-id').value;
+  if(!editId) return;
+  if(!confirm('この面談記録を削除しますか？')) return;
+  try {
+    await api('DELETE', `records?id=eq.${editId}`);
+    showToast('削除しました');showScreen('screen-detail');
+  } catch(e){showToast('削除に失敗しました','error');}
 }
 
 function resetEvalForm(){
   document.getElementById('ne-title').textContent='パートナー評価を追加';
-  if(currentCandidate)document.getElementById('ne-candidate-label').textContent=`${currentCandidate.store}　${currentCandidate.name}`;
-  document.getElementById('ne-date').value=new Date().toISOString().slice(0,10);
-  document.getElementById('ne-supporter').value='';document.getElementById('ne-edit-id').value='';
-  document.getElementById('ne-save-btn').textContent='評価を保存';document.getElementById('ne-delete-btn').style.display='none';
+  if(currentCandidate) document.getElementById('ne-candidate-label').textContent=`${currentCandidate.store}　${currentCandidate.name}`;
+  document.getElementById('ne-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('ne-supporter').value='';
+  document.getElementById('ne-edit-id').value='';
+  document.getElementById('ne-save-btn').textContent='評価を保存';
+  document.getElementById('ne-delete-btn').style.display='none';
   document.querySelectorAll('#ne-chips .chip').forEach(c=>c.classList.remove('selected'));
   ['5s','communication','followup','attitude'].forEach(k=>setStarValue(k,0));
   document.getElementById('ne-partner-comment').value='';
+  document.getElementById('ne-count').value='';
+  document.getElementById('ne-partner-name').value='';
 }
 async function editEval(evalId){
-  try{
-    const evals=await api('GET',`evaluations?id=eq.${evalId}&select=*`);const e=evals[0];if(!e)return;
+  try {
+    const evals = await api('GET', `evaluations?id=eq.${evalId}&select=*`);
+    const e = evals[0];if(!e) return;
     document.getElementById('ne-title').textContent='パートナー評価を編集';
-    if(currentCandidate)document.getElementById('ne-candidate-label').textContent=`${currentCandidate.store}　${currentCandidate.name}`;
-    document.getElementById('ne-date').value=e.date;document.getElementById('ne-edit-id').value=e.id;
-    document.getElementById('ne-save-btn').textContent='更新する';document.getElementById('ne-delete-btn').style.display='inline-flex';
-    setChipValue('ne',e.evaluator);setStarValue('5s',e.score_5s);setStarValue('communication',e.score_communication);setStarValue('followup',e.score_followup);setStarValue('attitude',e.score_attitude);
-    document.getElementById('ne-partner-comment').value=e.partner_comment||'';
+    if(currentCandidate) document.getElementById('ne-candidate-label').textContent=`${currentCandidate.store}　${currentCandidate.name}`;
+    document.getElementById('ne-date').value = e.date;
+    document.getElementById('ne-edit-id').value = e.id;
+    document.getElementById('ne-save-btn').textContent='更新する';
+    document.getElementById('ne-delete-btn').style.display='inline-flex';
+    setChipValue('ne', e.evaluator);
+    setStarValue('5s', e.score_5s);
+    setStarValue('communication', e.score_communication);
+    setStarValue('followup', e.score_followup);
+    setStarValue('attitude', e.score_attitude);
+    document.getElementById('ne-partner-comment').value = e.partner_comment||'';
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-    document.getElementById('screen-new-eval').classList.add('active');window.scrollTo(0,0);
-  }catch(e){showToast('読み込みエラー','error');}
+    document.getElementById('screen-new-eval').classList.add('active');
+    window.scrollTo(0,0);
+  } catch(e){showToast('読み込みエラー','error');}
 }
 async function saveEval(){
-  const date=document.getElementById('ne-date').value,evaluator=document.getElementById('ne-supporter').value;
-  const score_5s=parseInt(document.getElementById('ne-5s').value)||null,score_communication=parseInt(document.getElementById('ne-communication').value)||null,score_followup=parseInt(document.getElementById('ne-followup').value)||null,score_attitude=parseInt(document.getElementById('ne-attitude').value)||null;
-  const partner_comment=document.getElementById('ne-partner-comment').value.trim(),editId=document.getElementById('ne-edit-id').value;
+  const date = document.getElementById('ne-date').value;
+  const evaluator = document.getElementById('ne-supporter').value;
+  const score_5s = parseInt(document.getElementById('ne-5s').value)||null;
+  const score_communication = parseInt(document.getElementById('ne-communication').value)||null;
+  const score_followup = parseInt(document.getElementById('ne-followup').value)||null;
+  const score_attitude = parseInt(document.getElementById('ne-attitude').value)||null;
+  const partner_comment = document.getElementById('ne-partner-comment').value.trim();
+  const editId = document.getElementById('ne-edit-id').value;
   if(!date||!evaluator){alert('評価日と評価者を入力してください');return;}
-  const btn=document.getElementById('ne-save-btn');btn.disabled=true;
-  try{
-    if(editId){await api('PATCH',`evaluations?id=eq.${editId}`,{date,evaluator,score_5s,score_communication,score_followup,score_attitude,partner_comment});showToast('更新しました');}
-    else{await api('POST','evaluations',{candidate_id:currentCandidateId,date,evaluator,score_5s,score_communication,score_followup,score_attitude,partner_comment});showToast('保存しました');}
-    currentTab='evals';showScreen('screen-detail');setTimeout(()=>switchTab('evals'),300);
-  }catch(e){showToast('保存に失敗しました','error');}finally{btn.disabled=false;}
+  const btn = document.getElementById('ne-save-btn');btn.disabled=true;
+  try {
+    if(editId){
+      await api('PATCH', `evaluations?id=eq.${editId}`, {date,evaluator,score_5s,score_communication,score_followup,score_attitude,partner_comment});
+      showToast('更新しました');
+    } else {
+      await api('POST', 'evaluations', {candidate_id:currentCandidateId,date,evaluator,score_5s,score_communication,score_followup,score_attitude,partner_comment});
+      showToast('保存しました');
+    }
+    currentTab='evals';
+    showScreen('screen-detail');
+    setTimeout(()=>switchTab('evals'),300);
+  } catch(e){showToast('保存に失敗しました','error');}
+  finally{btn.disabled=false;}
 }
 async function deleteEval(){
-  const editId=document.getElementById('ne-edit-id').value;if(!editId)return;
-  if(!confirm('この評価を削除しますか？'))return;
-  try{await api('DELETE',`evaluations?id=eq.${editId}`);showToast('削除しました');currentTab='evals';showScreen('screen-detail');setTimeout(()=>switchTab('evals'),300);}
-  catch(e){showToast('削除に失敗しました','error');}
+  const editId = document.getElementById('ne-edit-id').value;
+  if(!editId) return;
+  if(!confirm('この評価を削除しますか？')) return;
+  try {
+    await api('DELETE', `evaluations?id=eq.${editId}`);
+    showToast('削除しました');
+    currentTab='evals';
+    showScreen('screen-detail');
+    setTimeout(()=>switchTab('evals'),300);
+  } catch(e){showToast('削除に失敗しました','error');}
 }
 
 loadCandidates();
