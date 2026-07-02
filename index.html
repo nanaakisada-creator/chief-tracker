@@ -520,7 +520,7 @@ async function loadEvals(){
             <button class="icon-btn" onclick="editEval(${e.id})" title="編集"><i class="ti ti-edit"></i></button>
           </div>
         </div>
-        ${e.partner_name?`<div style="font-size:12px;color:var(--text2);margin-bottom:8px;"><i class="ti ti-user" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>評価対象：${e.partner_name}</div>`:''}
+        ${e.partner_name?`<div style="font-size:12px;color:var(--text2);margin-bottom:8px;"><i class="ti ti-user" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>評価したパートナー：${e.partner_name}</div>`:''}
         ${Object.entries(labels).map(([k,l])=>`
           <div class="eval-row">
             <span class="eval-label">${l}</span>
