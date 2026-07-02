@@ -720,6 +720,8 @@ async function editEval(evalId){
     setStarValue('followup', e.score_followup);
     setStarValue('attitude', e.score_attitude);
     document.getElementById('ne-partner-comment').value = e.partner_comment||'';
+    document.getElementById('ne-count').value = e.eval_count||'';
+    document.getElementById('ne-partner-name').value = e.partner_name||'';
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
     document.getElementById('screen-new-eval').classList.add('active');
     window.scrollTo(0,0);
